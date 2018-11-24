@@ -4,7 +4,8 @@ import pixi from "./pixi";
 var app = new pixi.Application({
   autoResize: true,
   resolution: devicePixelRatio,
-  backgroundColor : 0x1099bb
+  antialias: true,
+  transparent: true
 });
 PIXI.app = app;
 
