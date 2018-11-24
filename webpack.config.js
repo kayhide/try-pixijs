@@ -110,5 +110,14 @@ module.exports = {
 			minSize: 30000,
 			name: false
 		}
-	}
+	},
+
+  plugins: [
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "[name].css",
+      chunkFilename: "[id].css"
+    })
+  ]
 };

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "pixi.js": "^4.8.2"
+  },
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@webpack-cli/init": "^0.1.2",
