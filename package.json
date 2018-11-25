@@ -23,6 +23,6 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --hot --inline --watch-content-base --content-base public/ --open-page index.html",
-    "build": "webpack && cp dist/* public/* docs/"
+    "build": "webpack && cp -r dist/* public/* docs/"
   }
 }
