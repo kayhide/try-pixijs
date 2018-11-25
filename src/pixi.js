@@ -1,2 +1,2 @@
-import pixi from "pixi.js";
+import "../node_modules/pixi.js";
 export default PIXI;

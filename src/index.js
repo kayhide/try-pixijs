@@ -1,6 +1,8 @@
+import "lodash";
+import pixi from "pixi";
+
+import Piece from "puzzle/piece";
 import "./style.css";
-import pixi from "./pixi";
-import _ from "lodash";
 
 var app = new pixi.Application({
   autoResize: true,
@@ -8,7 +10,7 @@ var app = new pixi.Application({
   antialias: true,
   transparent: true
 });
-PIXI.app = app;
+pixi.app = app;
 
 document.body.appendChild(app.view);
 window.addEventListener('resize', adjustPlacement);
@@ -21,41 +23,49 @@ function adjustPlacement() {
   app.stage.position.y = app.screen.height / 2;
 }
 
-var file = "IMG_2062.jpg"
-var image = pixi.Sprite.fromImage(file)
-image.anchor.set(0.5);
-image.scale.set(0.2, 0.2);
-
 pixi.loader.add("puzzle_small", "samples/puzzle_400x300_6.json");
 pixi.loader.add("puzzle_middle", "samples/puzzle_400x300_88.json");
 pixi.loader.add("puzzle_large", "samples/puzzle_400x300_972.json");
+pixi.loader.add("image", "IMG_2062.jpg");
 pixi.loader.load((loader, resources) => {
-  const piece = resources.puzzle_small.data.pieces[0];
-  resources.puzzle_middle.data.pieces.forEach(piece => {
-    var mask = new pixi.Graphics();
-    mask.beginFill(0.5, 0.5);
-    mask.lineStyle(1, 0xFFFFFF, 0.5);
-    mask.moveTo(...piece.points[0]);
-    _.chunk(piece.points.slice(1), 3).forEach(([p1, p2, p3]) => {
-      if (p1 && p2) {
-        mask.bezierCurveTo(...p1, ...p2, ...p3);
-      } else {
-        mask.lineTo(...p3);
-      }
-    });
-    mask.endFill();
-    const bounds = mask.getBounds();
-    mask.pivot.set(bounds.width / 2 + bounds.x, bounds.height / 2 + bounds.y);
-    mask.position.set(- bounds.width / 2 - bounds.x, - bounds.height / 2 - bounds.y);
-    image.addChild(mask);
-    app.ticker.add((delta) => {
-      mask.rotation -= 0.02 * delta;
+  const puzzle = {
+    data: resources.puzzle_small.data,
+    texture: resources.image.texture,
+    pieces: null
+  };
+  const textureScale = [
+    puzzle.data.width / puzzle.texture.width,
+    puzzle.data.height / puzzle.texture.hegiht
+  ];
+
+  puzzle.pieces = puzzle.data.pieces.map(data => {
+    var piece = Piece.create(data);
+    var sprite = new pixi.Sprite(puzzle.texture);
+    sprite.scale.set(...textureScale);
+    Piece.texturize(piece, sprite);
+    app.stage.addChild(piece.actor);
+
+
+    const bounds = piece.actor.getLocalBounds();
+    const center = [bounds.width / 2 + bounds.x, bounds.height / 2 + bounds.y];
+    piece.actor.pivot.set(...center);
+    piece.actor.position.set(...center);
+    piece.actor.x -= puzzle.data.width / 2;
+    piece.actor.y -= puzzle.data.height / 2;
+    return piece;
+  });
+
+  const pieces = _.sampleSize(puzzle.pieces, 10);
+
+  app.ticker.add((delta) => {
+    pieces.forEach(piece => {
+      piece.actor.rotation -= 0.02 * delta;
     });
   });
 });
 
 
-app.stage.addChild(image);
-app.ticker.add((delta) => {
-  image.rotation += 0.01 * delta;
-});
+// app.stage.addChild(image);
+// app.ticker.add((delta) => {
+//   image.rotation += 0.01 * delta;
+// });
