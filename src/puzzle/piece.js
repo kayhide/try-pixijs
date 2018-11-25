@@ -24,7 +24,8 @@ const Piece = {
     };
   },
 
-  texturize({ actor, geometry }, sprite) {
+  texturize({ actor, geometry }, texture) {
+    var sprite = new pixi.Sprite(texture);
     sprite.mask = geometry;
     actor.addChild(sprite);
   }
