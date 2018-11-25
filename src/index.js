@@ -1,8 +1,12 @@
+import "./style.css";
+
 import "lodash";
 import pixi from "pixi";
 
-import Piece from "puzzle/piece";
-import "./style.css";
+import Game from "puzzle/Game";
+import Piece from "puzzle/Piece";
+import PieceActor from "PieceActor";
+import Puzzle from "puzzle/Puzzle"
 
 var app = new pixi.Application({
   autoResize: true,
@@ -21,52 +25,42 @@ function adjustPlacement() {
   app.renderer.resize(parent.clientWidth, parent.clientHeight);
   app.stage.position.x = app.screen.width / 2;
   app.stage.position.y = app.screen.height / 2;
-  app.stage.scale.set(0.2);
+  app.stage.scale.set(0.15);
 }
+
 
 pixi.loader.add("puzzle_small", "samples/puzzle_400x300_6.json");
 pixi.loader.add("puzzle_middle", "samples/puzzle_400x300_88.json");
 pixi.loader.add("puzzle_large", "samples/puzzle_400x300_972.json");
 pixi.loader.add("image", "IMG_2062.jpg");
 pixi.loader.load((loader, resources) => {
-  const puzzle = {
-    data: resources.puzzle_middle.data,
-    texture: resources.image.texture,
-    pieces: null
-  };
-  const puzzleScale = [
-    puzzle.texture.width / puzzle.data.width,
-    puzzle.texture.hegiht / puzzle.data.height
-  ];
+  const game = new Game(resources.puzzle_middle.data);
+  const texture = resources.image.texture;
 
-  puzzle.pieces = puzzle.data.pieces.map(data => {
-    var piece = Piece.create(data);
-    piece.geometry.scale.set(...puzzleScale);
-    Piece.texturize(piece, puzzle.texture);
+  var playboard = new pixi.Container();
+  playboard.pivot.set(texture.width / 2, texture.height / 2);
 
-    const bounds = piece.actor.getLocalBounds();
-    const center = [bounds.width / 2 + bounds.x, bounds.height / 2 + bounds.y];
-    piece.actor.pivot.set(...center);
-    piece.actor.position.set(...center);
-    piece.actor.x -= puzzle.texture.width / 2;
-    piece.actor.y -= puzzle.texture.height / 2;
-
-    piece.actor.cacheAsBitmap = true;
-    app.stage.addChild(piece.actor);
-    return piece;
+  var puzzle = game.createPuzzle(texture.width, texture.height);
+  var actors = puzzle.pieces.map(piece => {
+    var actor = new PieceActor(piece, texture);
+    playboard.addChild(actor);
+    return actor;
   });
 
-  const pieces = _.sampleSize(puzzle.pieces, 100);
+  actors.forEach(actor => {
+    const bounds = actor.getLocalBounds();
+    const center = [bounds.width / 2 + bounds.x, bounds.height / 2 + bounds.y];
+    actor.pivot.set(...center);
+    actor.position.set(...center);
+    actor.cacheAsBitmap = true;
+  });
+  const actors = _.sampleSize(actors, 100);
 
+  app.stage.addChild(playboard);
   app.ticker.add((delta) => {
-    pieces.forEach(piece => {
-      piece.actor.rotation -= 0.02 * delta;
+    actors.forEach(actor => {
+      actor.rotation -= 0.02 * delta;
     });
+    playboard.rotation += 0.001 * delta;
   });
 });
-
-
-// app.stage.addChild(image);
-// app.ticker.add((delta) => {
-//   image.rotation += 0.01 * delta;
-// });
