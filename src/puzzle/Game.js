@@ -1,5 +1,3 @@
-import "lodash";
-
 import Piece from "./Piece"
 import Puzzle from "./Puzzle"
 

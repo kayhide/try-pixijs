@@ -1,26 +1,25 @@
-import "./style.css";
+import "./app.scss";
 
-import _ from "lodash";
-import pixi from "./pixi";
+import * as _ from "lodash";
+import * as PIXI from 'pixi.js'
 
 import Game from "./puzzle/Game";
-import Piece from "./puzzle/Piece";
 import PieceActor from "./PieceActor";
 import Puzzle from "./puzzle/Puzzle"
 
-var app = new pixi.Application({
+var app = new PIXI.Application({
   autoResize: true,
   resolution: devicePixelRatio,
   antialias: true,
   transparent: true
 });
-pixi.app = app;
+PIXI.app = app;
 
 document.body.appendChild(app.view);
-window.addEventListener('resize', adjustPlacement);
-window.addEventListener('load', adjustPlacement);
+window.addEventListener('resize', () => adjustPlacement());
+window.addEventListener('load', () => adjustPlacement());
 
-function adjustPlacement() {
+const adjustPlacement = () => {
   const parent = app.view.parentNode;
   app.renderer.resize(parent.clientWidth, parent.clientHeight);
   app.stage.position.x = app.screen.width / 2;
@@ -28,17 +27,25 @@ function adjustPlacement() {
   app.stage.scale.set(0.15);
 }
 
+const updateNav = difficulty => {
+  document.querySelectorAll("nav a").forEach(elm => {
+    if (elm.href.endsWith("#" + difficulty)) {
+      elm.classList.add("active");
+    } else {
+      elm.classList.remove("active");
+    }
+  })
+}
 
-// import puzzle_data from "../app/samples/puzzle_400x300_6.json";
-// import puzzle_data from "../app/samples/puzzle_400x300_88.json";
-import puzzle_data from "../app/samples/puzzle_400x300_972.json";
+const init = (resources) => {
+  const difficulty = window.location.hash.substr(1) || "easy";
+  updateNav(difficulty);
 
-pixi.loader.add("image", require("../app/IMG_2062.jpg"));
-pixi.loader.load((loader, resources) => {
-  const game = new Game(puzzle_data);
+  const game = new Game(puzzleData[difficulty]);
   const texture = resources.image.texture;
 
-  var playboard = new pixi.Container();
+  app.stage.removeChildren();
+  var playboard = new PIXI.Container();
   playboard.pivot.set(texture.width / 2, texture.height / 2);
 
   var puzzle = game.createPuzzle(texture.width, texture.height);
@@ -60,8 +67,28 @@ pixi.loader.load((loader, resources) => {
   app.stage.addChild(playboard);
   app.ticker.add((delta) => {
     actors.forEach(actor => {
-      actor.rotation -= 0.02 * delta;
+      actor.rotation -= 0.03 * delta;
     });
     playboard.rotation += 0.001 * delta;
   });
+};
+
+
+const puzzleDataEasy = require("../app/samples/puzzle_400x300_6.json");
+const puzzleDataNormal = require("../app/samples/puzzle_400x300_88.json");
+const puzzleDataHard = require("../app/samples/puzzle_400x300_972.json");
+const imageUrl = require("../app/IMG_2062.jpg");
+
+const puzzleData = {
+  easy: puzzleDataEasy,
+  normal: puzzleDataNormal,
+  hard: puzzleDataHard
+};
+
+
+PIXI.loader.add("image", imageUrl);
+window.addEventListener("popstate", e => {
+  PIXI.loader.load((loader, resources) => init(resources));
 });
+
+PIXI.loader.load((loader, resources) => init(resources));

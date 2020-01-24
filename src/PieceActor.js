@@ -1,9 +1,9 @@
-import _ from "lodash";
-import pixi from "./pixi";
+import * as _ from "lodash";
+import * as PIXI from 'pixi.js'
 
 import Piece from "./puzzle/Piece"
 
-class PieceActor extends pixi.Container {
+class PieceActor extends PIXI.Container {
   constructor(piece, texture) {
     super();
     this.piece = piece;
@@ -30,7 +30,7 @@ class PieceActor extends pixi.Container {
   }
 
   static createGeometry(piece) {
-    var geometry = new pixi.Graphics();
+    var geometry = new PIXI.Graphics();
     geometry.beginFill(0.5, 0.5);
     geometry.lineStyle(1, 0xFFFFFF, 0.5);
     geometry.moveTo(...piece.points[0]);
@@ -46,7 +46,7 @@ class PieceActor extends pixi.Container {
   }
 
   static createSprite(texture) {
-    return new pixi.Sprite(texture);
+    return new PIXI.Sprite(texture);
   }
 };
 

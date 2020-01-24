@@ -9,9 +9,11 @@
     "pixi": "^0.3.1",
     "pixi.js": "^4.8.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "sass": "^1.25.0"
+  },
   "scripts": {
-    "dev": "parcel app/index.html",
-    "build": "parcel build --out-dir docs --public-url /try-pixijs/ --no-source-maps app/index.html"
+    "dev": "parcel app/index.html app/samples/*.json",
+    "build": "rm -rf docs && parcel build --out-dir docs --public-url ./ --no-source-maps app/index.html"
   }
 }

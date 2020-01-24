@@ -1,6 +1,2 @@
-import "lodash";
-
-class Puzzle {
-}
-
-export default Puzzle;
+export default class Puzzle {
+};
