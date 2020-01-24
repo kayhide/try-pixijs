@@ -1,8 +1,6 @@
 import * as _ from "lodash";
 import * as PIXI from 'pixi.js'
 
-import Piece from "./puzzle/Piece"
-
 class PieceActor extends PIXI.Container {
   constructor(piece, texture) {
     super();

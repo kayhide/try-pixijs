@@ -5,7 +5,6 @@ import * as PIXI from 'pixi.js'
 
 import Game from "./puzzle/Game";
 import PieceActor from "./PieceActor";
-import Puzzle from "./puzzle/Puzzle"
 
 var app = new PIXI.Application({
   autoResize: true,

@@ -1,6 +1,3 @@
-import Piece from "./Piece"
-import Puzzle from "./Puzzle"
-
 class Game {
   constructor(data) {
     this.data = data;
@@ -11,10 +8,10 @@ class Game {
       width / this.data.width,
       height / this.data.height
     ];
-    var puzzle = new Puzzle();
+    var puzzle = new Object();
     puzzle.size = { width, height };
     puzzle.pieces = this.data.pieces.map(
-      piece => Object.assign(new Piece(), piece, { scale })
+      piece => Object.assign(new Object(), piece, { scale })
     );
     return puzzle;
   }
