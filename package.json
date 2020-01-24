@@ -1,28 +1,17 @@
 {
-  "name": "try-threejs",
+  "name": "try-pixijs",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.11",
+    "parcel": "^1.12.4",
+    "pixi": "^0.3.1",
     "pixi.js": "^4.8.2"
   },
-  "devDependencies": {
-    "@babel/core": "^7.1.6",
-    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
-    "@babel/preset-env": "^7.1.6",
-    "autoprefixer": "^9.3.1",
-    "babel-loader": "^8.0.4",
-    "css-loader": "^1.0.1",
-    "mini-css-extract-plugin": "^0.4.5",
-    "postcss-loader": "^3.0.0",
-    "precss": "^4.0.0",
-    "webpack": "^4.26.0",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10"
-  },
+  "devDependencies": {},
   "scripts": {
-    "dev": "webpack-dev-server --hot --inline --watch-content-base --content-base public/ --open-page index.html",
-    "build": "webpack && cp -r dist/* public/* docs/"
+    "dev": "parcel app/index.html",
+    "build": "parcel build --out-dir docs app/index.html"
   }
 }

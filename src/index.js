@@ -1,12 +1,12 @@
 import "./style.css";
 
-import "lodash";
-import pixi from "pixi";
+import _ from "lodash";
+import pixi from "./pixi";
 
-import Game from "puzzle/Game";
-import Piece from "puzzle/Piece";
-import PieceActor from "PieceActor";
-import Puzzle from "puzzle/Puzzle"
+import Game from "./puzzle/Game";
+import Piece from "./puzzle/Piece";
+import PieceActor from "./PieceActor";
+import Puzzle from "./puzzle/Puzzle"
 
 var app = new pixi.Application({
   autoResize: true,
@@ -29,12 +29,13 @@ function adjustPlacement() {
 }
 
 
-pixi.loader.add("puzzle_small", "samples/puzzle_400x300_6.json");
-pixi.loader.add("puzzle_middle", "samples/puzzle_400x300_88.json");
-pixi.loader.add("puzzle_large", "samples/puzzle_400x300_972.json");
-pixi.loader.add("image", "IMG_2062.jpg");
+// import puzzle_data from "../app/samples/puzzle_400x300_6.json";
+// import puzzle_data from "../app/samples/puzzle_400x300_88.json";
+import puzzle_data from "../app/samples/puzzle_400x300_972.json";
+
+pixi.loader.add("image", require("../app/IMG_2062.jpg"));
 pixi.loader.load((loader, resources) => {
-  const game = new Game(resources.puzzle_middle.data);
+  const game = new Game(puzzle_data);
   const texture = resources.image.texture;
 
   var playboard = new pixi.Container();
@@ -54,7 +55,7 @@ pixi.loader.load((loader, resources) => {
     actor.position.set(...center);
     actor.cacheAsBitmap = true;
   });
-  const actors = _.sampleSize(actors, 100);
+  // const actors = _.sampleSize(actors, 100);
 
   app.stage.addChild(playboard);
   app.ticker.add((delta) => {

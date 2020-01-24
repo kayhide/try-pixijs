@@ -1,13 +1,12 @@
-import "lodash";
-import pixi from "pixi";
+import _ from "lodash";
+import pixi from "./pixi";
 
-import Piece from "puzzle/Piece"
+import Piece from "./puzzle/Piece"
 
 class PieceActor extends pixi.Container {
   constructor(piece, texture) {
     super();
     this.piece = piece;
-    this.texture_ = texture;
     this.geometry = PieceActor.createGeometry(piece);
     this.geometry.scale.set(...piece.scale);
     this.sprite = PieceActor.createSprite(texture);

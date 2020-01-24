@@ -1,7 +1,7 @@
 import "lodash";
 
-import Piece from "puzzle/Piece"
-import Puzzle from "puzzle/Puzzle"
+import Piece from "./Piece"
+import Puzzle from "./Puzzle"
 
 class Game {
   constructor(data) {
