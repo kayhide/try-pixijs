@@ -6,7 +6,6 @@
   "dependencies": {
     "lodash": "^4.17.11",
     "parcel": "^1.12.4",
-    "pixi": "^0.3.1",
     "pixi.js": "^4.8.2"
   },
   "devDependencies": {

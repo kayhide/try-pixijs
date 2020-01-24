@@ -4,9 +4,14 @@
   </head>
   <body>
     <nav>
-      <a href="#easy">Easy</a>
-      <a href="#normal">Normal</a>
-      <a href="#hard">Hard</a>
+      <div id="difficulties" class="float-left">
+        <button data-difficulty="easy">Easy</button>
+        <button data-difficulty="normal">Normal</button>
+        <button data-difficulty="hard">Hard</button>
+      </div>
+      <div id="switches" class="float-right">
+        <button data-toggle="glow">Glow</button>
+      </div>
     </nav>
     <script src="../src/index.js"></script>
   </body>

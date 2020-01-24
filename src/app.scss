@@ -6,7 +6,8 @@ body {
 
 nav {
   position: absolute;
-  a {
+  width: 100%;
+  a, button {
     float: left;
     display: block;
     border: 1px solid #aaa;
@@ -16,6 +17,7 @@ nav {
     backdrop-filter: blur(5px);
     color: white;
     background-color: rgba(grey, 0.5);
+    font-size: 1rem;
     text-decoration: none;
 
     transition: background-color 300ms, box-shadow 300ms;
@@ -26,3 +28,11 @@ nav {
     };
   };
 };
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}

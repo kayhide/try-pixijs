@@ -14,6 +14,11 @@ var app = new PIXI.Application({
 });
 PIXI.app = app;
 
+var state = {
+  difficulty: "easy",
+  glowing: true,
+};
+
 document.body.appendChild(app.view);
 window.addEventListener('resize', () => adjustPlacement());
 window.addEventListener('load', () => adjustPlacement());
@@ -26,32 +31,44 @@ const adjustPlacement = () => {
   app.stage.scale.set(0.15);
 }
 
-const updateNav = difficulty => {
-  document.querySelectorAll("nav a").forEach(elm => {
-    if (elm.href.endsWith("#" + difficulty)) {
+const updateNav = () => {
+  document.querySelectorAll("[data-difficulty]").forEach(elm => {
+    if (state.difficulty === elm.dataset.difficulty) {
       elm.classList.add("active");
     } else {
       elm.classList.remove("active");
     }
   })
+  document.querySelectorAll("[data-toggle=glow]").forEach(elm => {
+    if (state.glowing) {
+      elm.classList.add("active");
+    } else {
+      elm.classList.remove("active");
+    }
+  });
 }
 
 const init = (resources) => {
-  const difficulty = window.location.hash.substr(1) || "easy";
-  updateNav(difficulty);
-
-  const game = new Game(puzzleData[difficulty]);
-  const texture = resources.image.texture;
+  updateNav();
 
   app.stage.removeChildren();
+
+  const texture = resources.image.texture;
   var playboard = new PIXI.Container();
   playboard.pivot.set(texture.width / 2, texture.height / 2);
 
+  const game = new Game(puzzleData[state.difficulty]);
   var puzzle = game.createPuzzle(texture.width, texture.height);
   var actors = puzzle.pieces.map(piece => {
     var actor = new PieceActor(piece, texture);
-    playboard.addChild(actor);
-    return actor;
+    const c = new PIXI.Container();
+    if (state.glowing) {
+      var glow = new PieceActor(piece, texture, { wireframe: true, blur: true });
+      c.addChild(glow);
+    }
+    c.addChild(actor);
+    playboard.addChild(c);
+    return c;
   });
 
   actors.forEach(actor => {
@@ -84,10 +101,19 @@ const puzzleData = {
   hard: puzzleDataHard
 };
 
-
 PIXI.loader.add("image", imageUrl);
-window.addEventListener("popstate", e => {
-  PIXI.loader.load((loader, resources) => init(resources));
+PIXI.loader.load((loader, resources) => {
+  document.querySelectorAll("[data-difficulty]").forEach(elm => {
+    elm.addEventListener("click", e => {
+      state.difficulty = elm.dataset.difficulty;
+      init(resources);
+    });
+  });
+  document.querySelectorAll("[data-toggle=glow]").forEach(elm => {
+    elm.addEventListener("click", e => {
+      state.glowing = ! state.glowing;
+      init(resources);
+    });
+  });
+  init(resources);
 });
-
-PIXI.loader.load((loader, resources) => init(resources));
