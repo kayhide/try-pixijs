@@ -12,6 +12,6 @@
   "devDependencies": {},
   "scripts": {
     "dev": "parcel app/index.html",
-    "build": "parcel build --out-dir docs app/index.html"
+    "build": "parcel build --out-dir docs --public-url /try-pixijs/ --no-source-maps app/index.html"
   }
 }
