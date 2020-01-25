@@ -30,9 +30,10 @@ class PieceActor extends PIXI.Container {
 
   createGeometry(piece) {
     var geometry = new PIXI.Graphics();
-    geometry.beginFill(0.5, 0.5);
     if (this.wireframe) {
-      geometry.lineStyle(5, 0xFFFFFF, 0.5);
+      geometry.lineStyle(5, 0xFFFFFF, 0.5, 0.5, true);
+    } else {
+      geometry.beginFill(0.5, 0.5);
     }
     geometry.moveTo(...piece.points[0]);
     _.chunk(piece.points.slice(1), 3).forEach(([p1, p2, p3]) => {

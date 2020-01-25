@@ -6,7 +6,9 @@ body {
 
 nav {
   position: absolute;
+  z-index: 10;
   width: 100%;
+
   a, button {
     float: left;
     display: block;
@@ -20,11 +22,17 @@ nav {
     font-size: 1rem;
     text-decoration: none;
 
-    transition: background-color 300ms, box-shadow 300ms;
+    transition: background-color, box-shadow, filter;
+    transition-duration: 300ms;
 
     &.active {
       background-color: rgba(lighten(grey, 20%), 0.5);
       box-shadow: 0 0 4px cyan;
+    };
+
+    &:hover {
+      cursor: pointer;
+      filter: brightness(1.2);
     };
   };
 };
@@ -35,4 +43,11 @@ nav {
 
 .float-right {
   float: right;
+}
+
+canvas {
+  transition: filter 300ms ease;
+  &.shadow {
+    filter: drop-shadow(0 0 3px white) drop-shadow(0 6px 6px black);
+  }
 }

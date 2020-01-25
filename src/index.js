@@ -16,7 +16,8 @@ PIXI.app = app;
 
 var state = {
   difficulty: "easy",
-  glowing: true,
+  glowing: false,
+  shadowing: false,
 };
 
 document.body.appendChild(app.view);
@@ -39,18 +40,12 @@ const updateNav = () => {
       elm.classList.remove("active");
     }
   })
-  document.querySelectorAll("[data-toggle=glow]").forEach(elm => {
-    if (state.glowing) {
-      elm.classList.add("active");
-    } else {
-      elm.classList.remove("active");
-    }
+  document.querySelectorAll("[data-toggle]").forEach(elm => {
+    elm.classList[state[elm.dataset.toggle] ? "add" : "remove"]("active");
   });
 }
 
 const init = (resources) => {
-  updateNav();
-
   app.stage.removeChildren();
 
   const texture = resources.image.texture;
@@ -106,14 +101,26 @@ PIXI.loader.load((loader, resources) => {
   document.querySelectorAll("[data-difficulty]").forEach(elm => {
     elm.addEventListener("click", e => {
       state.difficulty = elm.dataset.difficulty;
+      updateNav();
       init(resources);
     });
   });
-  document.querySelectorAll("[data-toggle=glow]").forEach(elm => {
+  document.querySelectorAll("[data-toggle=glowing]").forEach(elm => {
     elm.addEventListener("click", e => {
       state.glowing = ! state.glowing;
+      updateNav();
       init(resources);
     });
   });
+  document.querySelectorAll("[data-toggle=shadowing]").forEach(elm => {
+    elm.addEventListener("click", e => {
+      state.shadowing = ! state.shadowing;
+      updateNav();
+      document.querySelectorAll("canvas").forEach(canvas => {
+        canvas.classList[state.shadowing ? "add" : "remove"]("shadow");
+      });
+    });
+  });
+  updateNav();
   init(resources);
 });
