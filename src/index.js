@@ -96,8 +96,9 @@ const puzzleData = {
   hard: puzzleDataHard
 };
 
-PIXI.loader.add("image", imageUrl);
-PIXI.loader.load((loader, resources) => {
+const loader = PIXI.Loader.shared;
+loader.add("image", imageUrl);
+loader.load((loader, resources) => {
   document.querySelectorAll("[data-difficulty]").forEach(elm => {
     elm.addEventListener("click", e => {
       state.difficulty = elm.dataset.difficulty;
